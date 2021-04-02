@@ -104,6 +104,14 @@ struct dsi_panel_phy_props {
 	enum dsi_panel_rotation rotation;
 };
 
+struct dsi_whitep_display_para {
+	int white_point_x;
+	int white_point_y;
+	u32 white_point_r;
+	u32 white_point_g;
+	u32 white_point_b;
+};
+
 struct dsi_backlight_config {
 	enum dsi_backlight_type type;
 	enum bl_update_flag bl_update;
@@ -296,6 +304,8 @@ int dsi_panel_post_enable(struct dsi_panel *panel);
 int dsi_panel_pre_disable(struct dsi_panel *panel);
 
 int dsi_panel_disable(struct dsi_panel *panel);
+
+int dsi_panel_set_feature(struct dsi_panel *panel,enum dsi_cmd_set_type type);
 
 int dsi_panel_unprepare(struct dsi_panel *panel);
 

@@ -32,6 +32,10 @@
 #define MAX_PANEL_JITTER		10
 #define DEFAULT_PANEL_PREFILL_LINES	25
 #define MIN_PREFILL_LINES      35
+char g_lcd_id[128];
+extern bool panel_init_judge;
+
+bool backlight_val;
 
 enum dsi_dsc_ratio_type {
 	DSC_8BPC_8BPP,
@@ -95,6 +99,7 @@ static char dsi_dsc_rc_range_max_qp_1_1_scr1[][15] = {
 static char dsi_dsc_rc_range_bpg_offset[] = {2, 0, 0, -2, -4, -6, -8, -8,
 		-8, -10, -10, -12, -12, -12, -12};
 
+extern int lcd_bl_set_led_brightness(int value);
 int dsi_dsc_create_pps_buf_cmd(struct msm_display_dsc_info *dsc, char *buf,
 				int pps_id)
 {
@@ -362,6 +367,9 @@ static int dsi_panel_reset(struct dsi_panel *panel)
 	struct dsi_panel_reset_config *r_config = &panel->reset_config;
 	int i;
 
+	printk("kook: dsi_panel_reset\n");
+	printk("%d %s chenwenmin r_config->reset_gpio=%d\n", __LINE__, __func__, r_config->reset_gpio);
+	//return 0;
 	if (gpio_is_valid(panel->reset_config.disp_en_gpio)) {
 		rc = gpio_direction_output(panel->reset_config.disp_en_gpio, 1);
 		if (rc) {
@@ -383,7 +391,7 @@ static int dsi_panel_reset(struct dsi_panel *panel)
 		gpio_set_value(r_config->reset_gpio,
 			       r_config->sequence[i].level);
 
-
+		printk("kook: reset value=%d, delay_time=%d", r_config->sequence[i].level, r_config->sequence[i].sleep_ms);
 		if (r_config->sequence[i].sleep_ms)
 			usleep_range(r_config->sequence[i].sleep_ms * 1000,
 				(r_config->sequence[i].sleep_ms * 1000) + 100);
@@ -492,12 +500,17 @@ static int dsi_panel_power_off(struct dsi_panel *panel)
 {
 	int rc = 0;
 
+	//return 0;
 	if (gpio_is_valid(panel->reset_config.disp_en_gpio))
 		gpio_set_value(panel->reset_config.disp_en_gpio, 0);
 
+
+	if (gpio_is_valid(panel->reset_config.reset_gpio))
+		gpio_set_value(panel->reset_config.reset_gpio, 1);//set high, mod by chenwenmin
+
 	if (gpio_is_valid(panel->reset_config.reset_gpio) &&
 					!panel->reset_gpio_always_on)
-		gpio_set_value(panel->reset_config.reset_gpio, 0);
+		gpio_set_value(panel->reset_config.reset_gpio, 1);
 
 	if (gpio_is_valid(panel->reset_config.lcd_mode_sel_gpio))
 		gpio_set_value(panel->reset_config.lcd_mode_sel_gpio, 0);
@@ -660,6 +673,7 @@ static int dsi_panel_update_backlight(struct dsi_panel *panel,
 	return rc;
 }
 
+/*
 static int dsi_panel_update_pwm_backlight(struct dsi_panel *panel,
 	u32 bl_lvl)
 {
@@ -710,12 +724,17 @@ static int dsi_panel_update_pwm_backlight(struct dsi_panel *panel,
 error:
 	return rc;
 }
-
+*/
 int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 {
 	int rc = 0;
 	struct dsi_backlight_config *bl = &panel->bl_config;
 
+	if(bl_lvl > 0)
+		backlight_val = true;
+	else
+		backlight_val = false;
+	
 	if (panel->host_config.ext_bridge_mode)
 		return 0;
 
@@ -730,7 +749,8 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 	case DSI_BACKLIGHT_EXTERNAL:
 		break;
 	case DSI_BACKLIGHT_PWM:
-		rc = dsi_panel_update_pwm_backlight(panel, bl_lvl);
+		lcd_bl_set_led_brightness((int)bl_lvl);
+		//rc = dsi_panel_update_pwm_backlight(panel, bl_lvl);
 		break;
 	default:
 		DSI_ERR("Backlight type(%d) not supported\n", bl->type);
@@ -1733,6 +1753,10 @@ const char *cmd_set_prop_map[DSI_CMD_SET_MAX] = {
 	"qcom,mdss-dsi-post-mode-switch-on-command",
 	"qcom,mdss-dsi-qsync-on-commands",
 	"qcom,mdss-dsi-qsync-off-commands",
+	"qcom,mdss-dsi-cabc-on-command",
+    "qcom,mdss-dsi-cabc-off-command",
+	"qcom,mdss-dsi-cabc_movie-on-command",
+	"qcom,mdss-dsi-cabc_still-on-command",
 };
 
 const char *cmd_set_state_map[DSI_CMD_SET_MAX] = {
@@ -1759,6 +1783,10 @@ const char *cmd_set_state_map[DSI_CMD_SET_MAX] = {
 	"qcom,mdss-dsi-post-mode-switch-on-command-state",
 	"qcom,mdss-dsi-qsync-on-commands-state",
 	"qcom,mdss-dsi-qsync-off-commands-state",
+	"qcom,mdss-dsi-cabc-on-command-state",
+    "qcom,mdss-dsi-cabc-off-command-state",
+	"qcom,mdss-dsi-cabc_movie-on-command-state",
+	"qcom,mdss-dsi-cabc_still-on-command-state",
 };
 
 static int dsi_panel_get_cmd_pkt_count(const char *data, u32 length, u32 *cnt)
@@ -2149,6 +2177,7 @@ static int dsi_panel_parse_gpios(struct dsi_panel *panel)
 
 	panel->reset_config.reset_gpio = utils->get_named_gpio(utils->data,
 					      reset_gpio_name, 0);
+	DSI_ERR("kook: [%s], gpio=%d\n", panel->name, panel->reset_config.reset_gpio);
 	if (!gpio_is_valid(panel->reset_config.reset_gpio) &&
 		!panel->host_config.ext_bridge_mode) {
 		rc = panel->reset_config.reset_gpio;
@@ -3283,6 +3312,8 @@ struct dsi_panel *dsi_panel_get(struct device *parent,
 	if (!panel->name)
 		panel->name = DSI_PANEL_DEFAULT_LABEL;
 
+	strcpy(g_lcd_id,panel->name);
+
 	/*
 	 * Set panel type to LCD as default.
 	 */
@@ -4147,6 +4178,30 @@ exit:
 	return rc;
 }
 
+int dsi_panel_set_feature(struct dsi_panel *panel,enum dsi_cmd_set_type type)
+{
+	int rc = 0;
+
+	if (!panel) {
+		pr_err("Invalid params\n");
+	return -EINVAL;
+	}
+
+	pr_info("hyper:%s panel_init_judge=%d type=%d,backlight_val = %d\n",__func__,panel_init_judge,type,backlight_val);
+	if ((!panel_init_judge) ||  (!backlight_val)) {
+		pr_err("hyper: con't set cmds type=%d\n",type);
+		return -EINVAL;
+	}
+	mutex_lock(&panel->panel_lock);
+	rc = dsi_panel_tx_cmd_set(panel, type);
+	if (rc) {
+		pr_err("[%s] failed to send DSI_CMD_SET_FEATURE_ON/OFF cmds, rc=%d,type=%d\n",
+		panel->name, rc,type);
+	}
+	mutex_unlock(&panel->panel_lock);
+	return rc;
+}
+
 int dsi_panel_send_qsync_on_dcs(struct dsi_panel *panel,
 		int ctrl_idx)
 {
@@ -4366,8 +4421,10 @@ int dsi_panel_enable(struct dsi_panel *panel)
 	if (rc)
 		DSI_ERR("[%s] failed to send DSI_CMD_SET_ON cmds, rc=%d\n",
 		       panel->name, rc);
-	else
+	else {
 		panel->panel_initialized = true;
+		panel_init_judge = true;
+	}
 	mutex_unlock(&panel->panel_lock);
 	return rc;
 }
@@ -4389,6 +4446,7 @@ int dsi_panel_post_enable(struct dsi_panel *panel)
 		       panel->name, rc);
 		goto error;
 	}
+	panel_init_judge = true;
 error:
 	mutex_unlock(&panel->panel_lock);
 	return rc;
@@ -4414,6 +4472,8 @@ int dsi_panel_pre_disable(struct dsi_panel *panel)
 
 error:
 	mutex_unlock(&panel->panel_lock);
+	panel->panel_initialized = false;
+	panel_init_judge =  false;
 	return rc;
 }
 
@@ -4453,6 +4513,7 @@ int dsi_panel_disable(struct dsi_panel *panel)
 		}
 	}
 	panel->panel_initialized = false;
+	panel_init_judge = false;
 	panel->power_mode = SDE_MODE_DPMS_OFF;
 
 	mutex_unlock(&panel->panel_lock);

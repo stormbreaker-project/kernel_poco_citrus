@@ -53,9 +53,7 @@ static int msm_notifier_fps_chg_callback(struct notifier_block *nb,
 	 * Default will be FPS60 and sent to scheduler during suspend.
 	 */
 	fps = notifier_data->refresh_rate;
-	if (fps > FPS120)
-		sched_fps = FPS144;
-	else if (fps > FPS90)
+	if (fps > FPS90)
 		sched_fps = FPS120;
 	else if (fps > FPS60)
 		sched_fps = FPS90;
