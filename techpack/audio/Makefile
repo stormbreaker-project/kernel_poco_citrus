@@ -17,6 +17,9 @@ endif
 ifeq ($(CONFIG_ARCH_SDM660), y)
 include $(srctree)/techpack/audio/config/sdm660auto.conf
 endif
+ifeq ($(CONFIG_ARCH_BENGAL), y)
+include $(srctree)/techpack/audio/config/bengalauto.conf
+endif
 
 # Use USERINCLUDE when you must reference the UAPI directories only.
 USERINCLUDE     += \
@@ -49,6 +52,11 @@ ifeq ($(CONFIG_ARCH_SDM660), y)
 LINUXINCLUDE    += \
                 -include $(srctree)/techpack/audio/config/sdm660autoconf.h
 endif
+ifeq ($(CONFIG_ARCH_BENGAL), y)
+LINUXINCLUDE    += \
+                -include $(srctree)/techpack/audio/config/bengalautoconf.h
+endif
+
 obj-y += soc/
 obj-y += dsp/
 obj-y += ipc/
