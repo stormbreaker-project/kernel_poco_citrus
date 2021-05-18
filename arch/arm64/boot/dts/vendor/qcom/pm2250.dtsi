@@ -473,33 +473,18 @@
 		};
 	};
 
-	socd {
-		polling-delay-passive = <0>;
+	soc {
+		polling-delay-passive = <100>;
 		polling-delay = <0>;
-		thermal-governor = "step_wise";
+		thermal-governor = "low_limits_cap";
 		thermal-sensors = <&bcl_soc>;
 		wake-capable-sensor;
+		tracks-low;
 
 		trips {
-			pm2250_socd_trip: socd-trip {
-				temperature = <90>;
-				hysteresis = <1>;
-				type = "passive";
-			};
-		};
-	};
-
-	socd-usr {
-		polling-delay-passive = <0>;
-		polling-delay = <0>;
-		thermal-governor = "user_space";
-		thermal-sensors = <&bcl_soc>;
-		wake-capable-sensor;
-
-		trips {
-			socd-usr-trip {
-				temperature = <100>;
-				hysteresis = <5>;
+			pm2250_low_soc: low-soc {
+				temperature = <10>;
+				hysteresis = <0>;
 				type = "passive";
 			};
 		};

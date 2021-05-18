@@ -83,7 +83,7 @@
 		};
 	};
 
-	socd {
+	soc {
 		cooling-maps {
 			soc_cpu6 {
 				trip = <&soc_trip>;

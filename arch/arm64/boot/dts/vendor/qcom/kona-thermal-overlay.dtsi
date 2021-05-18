@@ -5,7 +5,7 @@
 };
 
 &thermal_zones {
-	socd {
+	soc {
 		cooling-maps {
 			soc_cpu4 {
 				trip = <&soc_trip>;

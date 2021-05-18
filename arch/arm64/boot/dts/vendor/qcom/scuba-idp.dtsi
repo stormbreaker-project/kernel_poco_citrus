@@ -1,7 +1,7 @@
 #include "scuba-audio-overlay.dtsi"
+#include "scuba-thermal-overlay.dtsi"
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/iio/qcom,spmi-vadc.h>
-#include "scuba-thermal-overlay.dtsi"
 #include "scuba-sde-display.dtsi"
 #include "camera/scuba-camera-sensor-idp.dtsi"
 
@@ -16,7 +16,6 @@
 &pm2250_rg_leds {
 	status = "ok";
 };
-
 
 &pm2250_qg {
 	qcom,battery-data = <&scuba_batterydata>;

@@ -95,7 +95,7 @@
 		compatible = "qcom,cxip-lm-cooling-device";
 		reg = <0x3ed000 0xc008>;
 		qcom,thermal-client-offset = <0x8000>;
-		/* 5th offset to bypass VICTIM1 */
+		/* 4th offset to bypass VICTIM1 */
 		qcom,bypass-client-list = <0x3004 0x4004 0x6004 0xc004>;
 		#cooling-cells = <2>;
 	};
