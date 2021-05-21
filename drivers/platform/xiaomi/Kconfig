@@ -20,6 +20,13 @@ config MACH_XIAOMI_SM8250
 	help
 	  Support for Xiaomi SM8250 devices
 
+config MACH_XIAOMI_SM6115
+        bool "Xiaomi SM6115"
+        depends on ARCH_QCOM
+        select MACH_XIAOMI
+        help
+          Support for Xiaomi SM6115 devices
+
 menu "Xiaomi board selection"
 
 	config MACH_XIAOMI_ALIOTH
@@ -45,6 +52,12 @@ menu "Xiaomi board selection"
 		select MACH_XIAOMI_SM8250
 		help
 		  Support for Mi 10 Pro
+
+	config MACH_XIAOMI_LIME
+                bool "Xiaomi lime board"
+                select MACH_XIAOMI_SM6115
+                help
+                  Support for Redmi 9T
 
 	config MACH_XIAOMI_LMI
 		bool "Xiaomi lmi board"
