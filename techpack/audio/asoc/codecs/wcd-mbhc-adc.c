@@ -682,10 +682,12 @@ static void wcd_correct_swch_plug(struct work_struct *work)
 	enum wcd_mbhc_plug_type plug_type = MBHC_PLUG_TYPE_INVALID;
 	unsigned long timeout;
 	bool wrk_complete = false;
+	bool is_pa_on = false, spl_hs = false, spl_hs_reported = false;
+#ifndef CONFIG_MACH_XIAOMI_LIME
 	int pt_gnd_mic_swap_cnt = 0;
 	int no_gnd_mic_swap_cnt = 0;
-	bool is_pa_on = false, spl_hs = false, spl_hs_reported = false;
 	int ret = 0;
+#endif
 	int spl_hs_count = 0;
 	int output_mv = 0;
 	int cross_conn;
@@ -802,6 +804,7 @@ correct_plug_type:
 			is_pa_on = mbhc->mbhc_cb->hph_pa_on_status(
 					mbhc->component);
 
+#ifndef CONFIG_MACH_XIAOMI_LIME
 		if ((output_mv <= hs_threshold) &&
 		    (!is_pa_on)) {
 			/* Check for cross connection*/
@@ -855,6 +858,7 @@ correct_plug_type:
 				}
 			}
 		}
+#endif
 
 		if (output_mv > hs_threshold) {
 			pr_debug("%s: cable is extension cable\n", __func__);
