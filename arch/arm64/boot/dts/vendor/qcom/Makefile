@@ -1,3 +1,21 @@
+
+ifeq ($(CONFIG_MACH_XIAOMI_LIME),y)
+
+ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
+
+dtbo-$(CONFIG_ARCH_BENGAL) += \
+                bengal-idp-overlay.dtbo
+
+bengal-idp-overlay.dtbo-base := bengal-idp.dtb
+
+else
+dtb-$(CONFIG_ARCH_BENGAL) += \
+		bengal-idp.dtb
+
+endif
+
+else # CONFIG_MACH_XIAOMI_LIME
+
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
         dtbo-$(CONFIG_ARCH_KONA) += \
                 kona-cdp-overlay.dtbo \
@@ -128,63 +146,6 @@ dtb-$(CONFIG_ARCH_LAGOON) += \
 endif
 
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
-        dtbo-$(CONFIG_ARCH_BENGAL) += \
-                bengal-rumi-overlay.dtbo \
-                bengal-qrd-overlay.dtbo \
-                bengal-idp-overlay.dtbo \
-                bengal-idp-usbc-overlay.dtbo \
-                bengalp-idp-overlay.dtbo \
-                bengal-idp-1gb-overlay.dtbo \
-                bengal-idp-2gb-overlay.dtbo \
-                bengal-idp-usbc-1gb-overlay.dtbo \
-                bengal-idp-usbc-2gb-overlay.dtbo \
-                bengal-iot-idp-overlay.dtbo \
-                bengalp-iot-idp-overlay.dtbo \
-                bengal-iot-idp-2gb-overlay.dtbo \
-                bengal-iot-idp-usbc-2gb-overlay.dtbo \
-                bengal-iot-idp-usbc-overlay.dtbo \
-                bengalp-iot-idp-2gb-overlay.dtbo \
-                bengalp-iot-idp-usbc-2gb-overlay.dtbo \
-                bengalp-iot-idp-usbc-overlay.dtbo
-
-bengal-rumi-overlay.dtbo-base := bengal.dtb
-bengal-qrd-overlay.dtbo-base := bengal.dtb
-bengal-idp-overlay.dtbo-base := bengal.dtb
-bengal-idp-usbc-overlay.dtbo-base := bengal.dtb
-bengalp-idp-overlay.dtbo-base := bengalp.dtb
-bengal-idp-1gb-overlay.dtbo-base := bengal-1gb.dtb
-bengal-idp-2gb-overlay.dtbo-base := bengal-2gb.dtb
-bengal-idp-usbc-1gb-overlay.dtbo-base := bengal-1gb.dtb
-bengal-idp-usbc-2gb-overlay.dtbo-base := bengal-2gb.dtb
-bengal-iot-idp-overlay.dtbo-base := bengal-iot.dtb
-bengalp-iot-idp-overlay.dtbo-base := bengalp-iot.dtb
-bengal-iot-idp-2gb-overlay.dtbo-base := bengal-iot-2gb.dtb
-bengal-iot-idp-usbc-2gb-overlay.dtbo-base := bengal-iot-2gb.dtb
-bengal-iot-idp-usbc-overlay.dtbo-base := bengal-iot.dtb
-bengalp-iot-idp-2gb-overlay.dtbo-base := bengalp-iot-2gb.dtb
-bengalp-iot-idp-usbc-2gb-overlay.dtbo-base := bengalp-iot-2gb.dtb
-bengalp-iot-idp-usbc-overlay.dtbo-base := bengalp-iot.dtb
-else
-dtb-$(CONFIG_ARCH_BENGAL) += bengal-rumi.dtb \
-                bengal-qrd.dtb \
-		bengal-idp.dtb \
-		bengal-idp-usbc.dtb \
-		bengalp-idp.dtb \
-		bengal-idp-1gb.dtb \
-		bengal-idp-2gb.dtb \
-		bengal-idp-usbc-1gb.dtb \
-		bengal-idp-usbc-2gb.dtb \
-		bengal-iot-idp.dtb \
-		bengalp-iot-idp.dtb \
-		bengal-iot-idp-2gb.dtb \
-		bengal-iot-idp-usbc-2gb.dtb \
-		bengal-iot-idp-usbc.dtb \
-		bengalp-iot-idp-2gb.dtb \
-		bengalp-iot-idp-usbc-2gb.dtb \
-		bengalp-iot-idp-usbc.dtb
-endif
-
-ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
         dtbo-$(CONFIG_ARCH_SCUBA) += \
 		scuba-rumi-overlay.dtbo \
 		scuba-idp-overlay.dtbo \
@@ -288,6 +249,8 @@ sdm660-internal-codec-cdp.dtb \
         sdm660-usbc-audio-mtp.dtb \
         sdm660-usbc-audio-rcm.dtb
 endif
+
+endif # CONFIG_MACH_XIAOMI_LIME
 
 always		:= $(dtb-y)
 subdir-y	:= $(dts-dirs)
