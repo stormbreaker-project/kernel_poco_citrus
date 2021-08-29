@@ -135,26 +135,26 @@
 	socd {
 		cooling-maps {
 			soc_cpu0 {
-				trip = <&pmi632_low_soc>;
+				trip = <&pmi632_socd_trip>;
 				cooling-device =
 					<&CPU0 (THERMAL_MAX_LIMIT-4)
 						(THERMAL_MAX_LIMIT-4)>;
 			};
 
 			soc_cpu4 {
-				trip = <&pmi632_low_soc>;
+				trip = <&pmi632_socd_trip>;
 				cooling-device =
 					<&CPU4 (THERMAL_MAX_LIMIT-4)
 						(THERMAL_MAX_LIMIT-4)>;
 			};
 
 			soc_cpu6 {
-				trip = <&pmi632_low_soc>;
+				trip = <&pmi632_socd_trip>;
 				cooling-device = <&cpu6_isolate 1 1>;
 			};
 
 			soc_cpu7 {
-				trip = <&pmi632_low_soc>;
+				trip = <&pmi632_socd_trip>;
 				cooling-device = <&cpu7_isolate 1 1>;
 			};
 		};

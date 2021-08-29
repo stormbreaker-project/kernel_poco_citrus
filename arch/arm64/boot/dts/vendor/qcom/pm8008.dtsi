@@ -1,8 +1,8 @@
 #include <dt-bindings/interrupt-controller/irq.h>
 
-pm8008_8: qcom,pm8008@8 {
+pm8008_8: qcom,pm8008@28 {
 	compatible = "qcom,i2c-pmic";
-	reg = <0x8>;
+	reg = <0x28>;
 	#address-cells = <1>;
 	#size-cells = <0>;
 	interrupt-controller;

@@ -61,6 +61,7 @@
 	};
 
 	wsa881x_analog_clk_gpio: msm_cdc_pinctrl@18 {
+		status = "disabled";
 		compatible = "qcom,msm-cdc-pinctrl";
 		pinctrl-names = "aud_active", "aud_sleep";
 		pinctrl-0 = <&wsa_mclk_active>;
