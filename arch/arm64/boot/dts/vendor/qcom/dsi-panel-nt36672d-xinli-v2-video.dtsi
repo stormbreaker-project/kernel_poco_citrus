@@ -51,9 +51,9 @@
 		qcom,dsi-select-clocks = "mux_byte_clk0\0mux_pixel_clk0\0src_byte_clk0\0src_pixel_clk0\0shadow_byte_clk0\0shadow_pixel_clk0";
 		qcom,dsi-dyn-clk-list = <0x3a2f7bc0 0x3ae9ad50 0x3aab9cc8 0x3a6d8c48>;
 		qcom,dsi-dyn-clk-type = "constant-fps-adjust-vfp";
-		qcom,panel-supply-entries = <0>;
+		qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
 		qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_pwm";
-		pwms = <&tlmm 0x0 0x0>;
+		pwms = <&pm6125_pwm 0x0 0x0>;
 		qcom,bl-pmic-pwm-period-usecs = <0x64>;
 		qcom,mdss-dsi-bl-min-level = <0x01>;
 		qcom,mdss-dsi-bl-max-level = <0xfff>;
