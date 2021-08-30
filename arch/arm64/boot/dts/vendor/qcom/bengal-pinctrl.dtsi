@@ -1607,33 +1607,6 @@
 			};
 		};
 
-		cam_sensor_macro_vdig_active: cam_sensor_macro_vdig_active {
-			mux {
-				pins = "gpio68";
-				function = "gpio";
-			};
-
-			config {
-				pins = "gpio68";
-				bias-disable;
-				drive-strength = <2>; /* 2 MA */
-			};
-		};
-
-		cam_sensor_macro_vdig_suspend: cam_sensor_macro_vdig_suspend {
-			mux {
-				pins = "gpio68";
-				function = "gpio";
-			};
-
-			config {
-				pins = "gpio68";
-				bias-pull-down; /* PULL DOWN */
-				drive-strength = <2>; /* 2 MA */
-				output-low;
-			};
-		};
-
 		cam_sensor_macro_avdd_active: cam_sensor_macro_avdd_active {
 			mux {
 				pins = "gpio66";

@@ -132,7 +132,7 @@
 		};
 	};
 
-	soc {
+	socd {
 		cooling-maps {
 			soc_cpu0 {
 				trip = <&pmi632_low_soc>;

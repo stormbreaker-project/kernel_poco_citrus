@@ -6,6 +6,8 @@
 #include "dsi-panel-ft8719-truly-fhd-vid.dtsi"
 #include "dsi-panel-r66451-hd-plus-90hz-video.dtsi"
 #include "dsi-panel-r66451-hd-plus-90hz-cmd.dtsi"
+#include "dsi-panel-nt36672d-xinli-v2-video.dtsi"
+#include "dsi-panel-nt36672d-tianma-v2-video.dtsi"
 #include <dt-bindings/clock/mdss-14nm-pll-clk.h>
 
 &pmi632_gpios {
@@ -124,7 +126,7 @@
 		qcom,mdp = <&mdss_mdp>;
 
 		qcom,dsi-default-panel =
-			<&dsi_td4330_truly_v2_video &dsi_ft8719_truly_v2_video>;
+			<&dsi_td4330_truly_v2_video &dsi_ft8719_truly_v2_video &dsi_nt36672d_tianma_v2_video &dsi_nt36672d_xinli_v2_video>;
 	};
 
 	sde_wb: qcom,wb-display@0 {
@@ -136,7 +138,7 @@
 
 	msm_notifier: qcom,msm_notifier@0 {
 		compatible = "qcom,msm-notifier";
-		panel = <&dsi_td4330_truly_v2_video &dsi_ft8719_truly_v2_video>;
+		panel = <&dsi_td4330_truly_v2_video &dsi_ft8719_truly_v2_video &dsi_nt36672d_tianma_v2_video &dsi_nt36672d_xinli_v2_video>;
 
 	};
 };

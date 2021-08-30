@@ -7,12 +7,12 @@ qcom,4684293_huaqin_J19S-M_ATL_6000mAH_PMI632 {
     qcom,batt-id-kohm = <68>;
     qcom,battery-beta = <3440>;
     qcom,battery-therm-kohm = <10>;
-    qcom,battery-type = "4863588_Huaqin_J19s_6000mAH_PMI632_averaged_MasterSlave_Oct22th2020";
+    qcom,battery-type = "NVT";
     qcom,qg-batt-profile-ver = <100>;
 
 	qcom,jeita-fcc-ranges = <(-100) 0 0
 				0  50    580000
-				51  100  1800000
+				51  100  1700000
 				101 450  3000000
 				451 600  3000000>;
 	qcom,jeita-fv-ranges = <0   450   4450000
@@ -28,8 +28,8 @@ qcom,4684293_huaqin_J19S-M_ATL_6000mAH_PMI632 {
 	qcom,jeita-hard-thresholds = <0x58cd 0x14f3>;
 	/* COOL hys = 12 DegC, WARM hys = 40 DegC */
 	qcom,jeita-soft-hys-thresholds = <0x4777 0x25e3>;
-	qcom,jeita-soft-fcc-ua = <2500000 2500000>;
-	qcom,jeita-soft-fv-uv = <4250000 4250000>;
+	qcom,jeita-soft-fcc-ua = <3000000 3000000>;
+	qcom,jeita-soft-fv-uv = <4450000 4100000>;
 
 	qcom,fcc1-temp-lut {
 		qcom,lut-col-legend = <0 10 25 40 50>;
