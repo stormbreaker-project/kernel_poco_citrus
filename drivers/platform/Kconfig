@@ -15,4 +15,5 @@ source "drivers/platform/msm/Kconfig"
 
 if ARCH_QCOM
 source "drivers/platform/xiaomi/Kconfig"
+source "drivers/platform/poco/Kconfig"
 endif

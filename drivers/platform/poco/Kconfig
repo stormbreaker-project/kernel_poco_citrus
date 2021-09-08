@@ -1,0 +1,24 @@
+# Poco configuration options
+
+config MACH_POCO
+	bool "Poco device"
+	depends on ARCH_QCOM
+	help
+	  Support for Xiaomi products
+
+config MACH_POCO_SM6115
+        bool "POCO SM6115"
+        depends on ARCH_QCOM
+        select MACH_POCO
+        help
+          Support for Xiaomi SM6115 devices
+
+menu "Poco board selection"
+
+	config MACH_POCO_CITRUS
+                bool "Poco citrus board"
+                select MACH_POCO_SM6115
+                help
+                  Support for POCO M3
+
+endmenu
