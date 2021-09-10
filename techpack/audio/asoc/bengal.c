@@ -571,7 +571,7 @@ static struct wcd_mbhc_config wcd_mbhc_cfg = {
 	.swap_gnd_mic = NULL,
 	.hs_ext_micbias = true,
 	.key_code[0] = KEY_MEDIA,
-#ifdef CONFIG_MACH_XIAOMI_LIME
+#if defined(CONFIG_MACH_XIAOMI_LIME) || defined(CONFIG_MACH_POCO_CITRUS)
 	.key_code[1] = BTN_1,
 	.key_code[2] = BTN_2,
 	.key_code[3] = 0,
@@ -2884,7 +2884,7 @@ static int msm_bt_sample_rate_tx_put(struct snd_kcontrol *kcontrol,
 	return 0;
 }
 
-#ifdef CONFIG_MACH_XIAOMI_LIME
+#if defined(CONFIG_MACH_XIAOMI_LIME) || defined(CONFIG_MACH_POCO_CITRUS)
 //add for awinic pa 87359
 extern unsigned char aw87359_audio_dspk(void);
 extern unsigned char aw87359_audio_abrcv(void);
@@ -3020,7 +3020,7 @@ static const struct snd_kcontrol_new msm_int_snd_controls[] = {
 			cdc_dma_rx_format_get, cdc_dma_rx_format_put),
 	SOC_ENUM_EXT("RX_CDC_DMA_RX_5 Format", rx_cdc_dma_rx_5_format,
 			cdc_dma_rx_format_get, cdc_dma_rx_format_put),
-#ifdef CONFIG_MACH_XIAOMI_LIME
+#if defined(CONFIG_MACH_XIAOMI_LIME) || defined(CONFIG_MACH_POCO_CITRUS)
 //add for Awinic pa 87359 & 87519
 	SOC_ENUM_EXT("Ext_TOP_Speaker_Amp", msm_snd_enum[0],
 			ext_top_speaker_amp_get, ext_top_speaker_amp_put),
@@ -4503,7 +4503,7 @@ static void *def_wcd_mbhc_cal(void)
 		(sizeof(btn_cfg->_v_btn_low[0]) * btn_cfg->num_btn);
 
 	btn_high[0] = 75;
-#ifdef CONFIG_MACH_XIAOMI_LIME
+#if defined(CONFIG_MACH_XIAOMI_LIME) || defined(CONFIG_MACH_POCO_CITRUS)
 	btn_high[1] = 225;
 	btn_high[2] = 450;
 #else

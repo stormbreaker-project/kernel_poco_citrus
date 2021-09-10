@@ -683,7 +683,7 @@ static void wcd_correct_swch_plug(struct work_struct *work)
 	unsigned long timeout;
 	bool wrk_complete = false;
 	bool is_pa_on = false, spl_hs = false, spl_hs_reported = false;
-#ifndef CONFIG_MACH_XIAOMI_LIME
+#if !defined(CONFIG_MACH_XIAOMI_LIME) || !defined(CONFIG_MACH_POCO_CITRUS)
 	int pt_gnd_mic_swap_cnt = 0;
 	int no_gnd_mic_swap_cnt = 0;
 	int ret = 0;
@@ -804,7 +804,7 @@ correct_plug_type:
 			is_pa_on = mbhc->mbhc_cb->hph_pa_on_status(
 					mbhc->component);
 
-#ifndef CONFIG_MACH_XIAOMI_LIME
+#if !defined(CONFIG_MACH_XIAOMI_LIME) || !defined(CONFIG_MACH_POCO_CITRUS)
 		if ((output_mv <= hs_threshold) &&
 		    (!is_pa_on)) {
 			/* Check for cross connection*/

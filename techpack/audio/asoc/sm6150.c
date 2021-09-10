@@ -649,7 +649,7 @@ static struct wcd_mbhc_config wcd_mbhc_cfg = {
 	.hs_ext_micbias = true,
 	.key_code[0] = KEY_MEDIA,
 	.key_code[1] = KEY_VOICECOMMAND,
-#ifdef CONFIG_MACH_XIAOMI_LIME
+#if defined(CONFIG_MACH_XIAOMI_LIME) || defined(CONFIG_MACH_POCO_CITRUS)
 	.key_code[2] = BTN_1,
 	.key_code[3] = BTN_2,
 #else
