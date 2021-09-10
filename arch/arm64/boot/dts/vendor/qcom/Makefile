@@ -1,5 +1,5 @@
 
-ifeq ($(CONFIG_MACH_XIAOMI_LIME),y)
+ifeq ($(CONFIG_ARCH_BENGAL),y)
 
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 
@@ -14,7 +14,7 @@ dtb-$(CONFIG_ARCH_BENGAL) += \
 
 endif
 
-else # CONFIG_MACH_XIAOMI_LIME
+else # CONFIG_ARCH_BENGAL
 
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
         dtbo-$(CONFIG_ARCH_KONA) += \
@@ -250,7 +250,7 @@ sdm660-internal-codec-cdp.dtb \
         sdm660-usbc-audio-rcm.dtb
 endif
 
-endif # CONFIG_MACH_XIAOMI_LIME
+endif # CONFIG_ARCH_BENGAL
 
 always		:= $(dtb-y)
 subdir-y	:= $(dts-dirs)
