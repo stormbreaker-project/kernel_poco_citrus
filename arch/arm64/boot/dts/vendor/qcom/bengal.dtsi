@@ -276,7 +276,7 @@
 					dev = "/dev/block/platform/soc/4744000.sdhci/by-name/vendor";
 					type = "ext4";
 					mnt_flags = "ro,barrier=1,discard";
-					fsmgr_flags = [77 61 69 74 00 00 00 00 00];
+					fsmgr_flags = "wait";
 					status = "ok";
 				};
 			};
