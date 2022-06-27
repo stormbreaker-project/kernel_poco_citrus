@@ -39,6 +39,7 @@ static struct timeval start, end;
 const struct firmware *fw_entry = NULL;
 static size_t fw_need_write_size = 0;
 static uint8_t *fwbuf = NULL;
+extern char* nt36xxx_boot_update_firmware_name;
 
 struct nvt_ts_bin_map {
 	char name[12];
@@ -1004,7 +1005,7 @@ return:
 void Boot_Update_Firmware(struct work_struct *work)
 {
 	mutex_lock(&ts->lock);
-	nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME);
+	nvt_update_firmware(nt36xxx_boot_update_firmware_name);
 	mutex_unlock(&ts->lock);
 }
 #endif /* BOOT_UPDATE_FIRMWARE */

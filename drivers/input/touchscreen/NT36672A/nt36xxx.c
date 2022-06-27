@@ -82,6 +82,8 @@ static int nvt_drm_notifier_callback(struct notifier_block *self, unsigned long 
 #else
 static int nvt_fb_notifier_callback(struct notifier_block *self, unsigned long event, void *data);
 #endif
+char* nt36xxx_boot_update_firmware_name = BOOT_UPDATE_FIRMWARE_NAME;
+char* nt36xxx_mp_update_firmware_name = MP_UPDATE_FIRMWARE_NAME;
 #elif defined(CONFIG_HAS_EARLYSUSPEND)
 static void nvt_ts_early_suspend(struct early_suspend *h);
 static void nvt_ts_late_resume(struct early_suspend *h);
@@ -152,6 +154,19 @@ const struct mtk_chip_config spi_ctrdata = {
     .rx_mlsb = 1,
     .tx_mlsb = 1,
     .cs_pol = 0,
+};
+#endif
+
+#ifdef __DRM_PANEL_H__
+struct drm_panel_touchscreen {
+	const char* drm_panel_name;
+	const char* touchscreen_firmware_prefix;
+};
+static const struct drm_panel_touchscreen drm_panel_touchscreen_mapping[] = {
+	{"dsi_td4330_truly_v2_video", "nt33672a_tianma"},
+	{"dsi_nt36672a_truly_v2_video", "nt33672a_truly"},
+	{"dsi_nt36672d_xinli_v2_video", "nt33672d_xinli"},
+	{"dsi_nt36672d_tianma_v2_video", "nt33672d_tianma"},
 };
 #endif
 
@@ -1290,7 +1305,7 @@ static void nvt_esd_check_func(struct work_struct *work)
 		mutex_lock(&ts->lock);
 		NVT_ERR("do ESD recovery, timer = %d, retry = %d\n", timer, esd_retry);
 		/* do esd recovery, reload fw */
-		nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME);
+		nvt_update_firmware(nt36xxx_boot_update_firmware_name);
 		mutex_unlock(&ts->lock);
 		/* update interrupt timer */
 		irq_timer = jiffies;
@@ -1454,7 +1469,7 @@ static irqreturn_t nvt_ts_work_func(int irq, void *data)
    /* ESD protect by WDT */
    if (nvt_wdt_fw_recovery(point_data)) {
        NVT_ERR("Recover for fw reset, %02X\n", point_data[1]);
-       nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME);
+       nvt_update_firmware(nt36xxx_boot_update_firmware_name);
        goto XFER_ERROR;
    }
 #endif /* #if NVT_TOUCH_WDT_RECOVERY */
@@ -1642,7 +1657,7 @@ static int8_t nvt_ts_check_chip_ver_trim(uint32_t chip_ver_trim_addr)
 			}
 
 			if (found_nvt_chip) {
-				NVT_LOG("This is NVT touch IC\n");
+				NVT_LOG("This is NVT touch IC, trim_id_table index=%d\n", list);
 				ts->mmap = trim_id_table[list].mmap;
 				ts->carrier_system = trim_id_table[list].hwinfo->carrier_system;
 				ts->hw_crc = trim_id_table[list].hwinfo->hw_crc;
@@ -1719,14 +1734,40 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 #endif
 #ifdef __DRM_PANEL_H__
 	struct device_node *dp = client->dev.of_node;
+	int panel_index = 0;
+	const char* firmware_prefix = NULL;
 #endif
 
 	NVT_LOG("start\n");
 #ifdef __DRM_PANEL_H__
-		if (check_dt(dp)) {
-			NVT_ERR("%s: %s not actived\n", __func__, dp->name);
-			return -ENODEV;
+	if (check_dt(dp)) {
+		NVT_ERR("%s: %s not actived\n", __func__, dp->name);
+		return -ENODEV;
+	}
+	NVT_LOG("---active_panel=%s", active_panel->dev->of_node->name);
+
+	for (panel_index = 0;
+		 panel_index < sizeof(drm_panel_touchscreen_mapping) / sizeof(struct drm_panel_touchscreen);
+		 panel_index++) {
+
+		if (strstr(active_panel->dev->of_node->name,
+				   drm_panel_touchscreen_mapping[panel_index].drm_panel_name)) {
+			firmware_prefix = drm_panel_touchscreen_mapping[panel_index].touchscreen_firmware_prefix;
+
+			nt36xxx_boot_update_firmware_name = kmalloc(strlen(firmware_prefix)
+				+ sizeof(BOOT_UPDATE_FIRMWARE_NAME) + 1, GFP_KERNEL);
+			sprintf(nt36xxx_boot_update_firmware_name, "%s_%s", firmware_prefix, BOOT_UPDATE_FIRMWARE_NAME);
+			NVT_LOG("boot update firmware name is %s\n", nt36xxx_boot_update_firmware_name);
+
+			nt36xxx_mp_update_firmware_name = kmalloc(strlen(firmware_prefix)
+				+ sizeof(MP_UPDATE_FIRMWARE_NAME) + 1, GFP_KERNEL);
+			sprintf(nt36xxx_mp_update_firmware_name, "%s_%s", firmware_prefix, MP_UPDATE_FIRMWARE_NAME);
+			NVT_LOG("mp update firmware name is %s\n", nt36xxx_mp_update_firmware_name);
+
+			break;
 		}
+	}
+
 #endif
 	//cs_hold_time.
     fill_ctrl_data(client);
@@ -2385,7 +2426,7 @@ static int32_t nvt_ts_resume(struct device *dev)
 #if NVT_TOUCH_SUPPORT_HW_RST
 	gpio_set_value(ts->reset_gpio, 1);
 #endif
-	if (nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME)) {
+	if (nvt_update_firmware(nt36xxx_boot_update_firmware_name)) {
 		NVT_ERR("download firmware failed, ignore check fw state\n");
 	} else {
 		nvt_check_fw_reset_state(RESET_STATE_REK);
@@ -2439,7 +2480,7 @@ static int check_dt(struct device_node *np)
 
 	for (i = 0; i < count; i++) {
 		node = of_parse_phandle(np, "panel", i);
-		NVT_LOG("chenwenmin node=%p \n", node);
+		NVT_LOG("chenwenmin node=%p name=%s\n", node, node->name);
 		panel = of_drm_find_panel(node);
 		of_node_put(node);
 		NVT_LOG("chenwenmin IS_ERR(panel)=%d \n", IS_ERR(panel));

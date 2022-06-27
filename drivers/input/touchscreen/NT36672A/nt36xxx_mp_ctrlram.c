@@ -82,6 +82,7 @@ extern uint8_t nvt_get_fw_pipe(void);
 extern void nvt_read_mdata(uint32_t xdata_addr, uint32_t xdata_btn_addr);
 extern void nvt_get_mdata(int32_t *buf, uint8_t *m_x_num, uint8_t *m_y_num);
 int32_t nvt_mp_parse_dt(struct device_node *root, const char *node_compatible);
+extern char* nt36xxx_mp_update_firmware_name;
 
 /*******************************************************
 Description:
@@ -1263,7 +1264,7 @@ static int32_t nvt_selftest_open(struct inode *inode, struct file *file)
 		TestResult_SPI_Comm = 0;
 
 	//---Download MP FW---
-	nvt_update_firmware(MP_UPDATE_FIRMWARE_NAME);
+	nvt_update_firmware(nt36xxx_mp_update_firmware_name);
 
 	if (nvt_get_fw_info()) {
 		mutex_unlock(&ts->lock);
