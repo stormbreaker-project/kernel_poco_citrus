@@ -43,6 +43,7 @@
 #endif /* #if NVT_TOUCH_ESD_PROTECT */
 
 #if WAKEUP_GESTURE
+bool nvt_gesture_flag;
 #ifdef CONFIG_TOUCHSCREEN_COMMON
 #include <linux/input/tp_common.h>
 #endif
@@ -140,7 +141,7 @@ const uint16_t gesture_key_array[] = {
 static ssize_t double_tap_show(struct kobject *kobj,
                                struct kobj_attribute *attr, char *buf)
 {
-    return sprintf(buf, "%d\n", ts->db_wakeup);
+    return sprintf(buf, "%d\n", nvt_gesture_flag);
 }
 
 static ssize_t double_tap_store(struct kobject *kobj,
@@ -153,7 +154,7 @@ static ssize_t double_tap_store(struct kobject *kobj,
     if (rc)
     return -EINVAL;
 
-    ts->db_wakeup = !!val;
+    nvt_gesture_flag = !!val;
     return count;
 }
 
@@ -1739,7 +1740,6 @@ static int fill_ctrl_data(struct spi_device *client){
 }
 
 #if WAKEUP_GESTURE
-bool	nvt_gesture_flag;
 int nvt_gesture_switch(struct input_dev *dev, unsigned int type, unsigned int code, int value)
 {
 	if (type == EV_SYN && code == SYN_CONFIG) {
