@@ -2758,7 +2758,7 @@ return:
 static void __exit nvt_driver_exit(void)
 {
 	if(charger_boot_mode){
-		NVT_LOG("charger mode NOT load tp driver \n",__func__);
+		NVT_LOG("%s charger mode NOT load tp driver\n",__func__);
           	return;
 	}
 	spi_unregister_driver(&nvt_spi_driver);
