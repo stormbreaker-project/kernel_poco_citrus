@@ -9,17 +9,3 @@ config TOUCHSCREEN_NT36672A
 	  to your system by SPI bus.
 
 	  If unsure, say N.
-
-config NT_VENDOR_TRULY
-	bool "Load novatek truly firmware"
-	depends on !MACH_POCO_CITRUS
-	default y if MACH_XIAOMI_LIME
-	help
-	  Say Y here if your touchscreen is of truly vendor
-
-config NT_VENDOR_TIANMA
-	bool "Load novatek tianma firmware"
-	depends on !MACH_XIAOMI_LIME
-	default y if MACH_POCO_CITRUS
-	help
-	  Say Y here if your touchscreen is of tianma vendor
